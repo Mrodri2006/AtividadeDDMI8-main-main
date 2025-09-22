@@ -1,70 +1,65 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, KeyboardAvoidingView, ImageBackground } from 'react-native';
 import { useState } from 'react';
-import { Image } from 'react-native';
-import styles from '../estilo.js'
-
-
+import { StyleSheet, Text, View, Button, KeyboardAvoidingView, TouchableOpacity, ImageBackground, Image } from 'react-native';
+import { TextInput } from 'react-native-paper';
 import { auth } from '../firebase';
 import { useNavigation } from '@react-navigation/native';
+import styles from '../estilo';
 
 export default function Login() {
-  const [email, setEmail] = useState('');
-  const [senha, setSenha] = useState('');
+  const[email, setEmail] = useState('')
+  const[senha, setSenha] = useState('')
 
-  const navigation = useNavigation();
+  const navigation = useNavigation()
 
   const logar = () => {
     auth
-      .signInWithEmailAndPassword(email, senha)
-      .then(userCredentials => {
-        console.log('Logado : ', userCredentials.user.email);
-        navigation.replace("Home");
-      })
-      .catch(erro => alert(erro.message));
-  };
-
-  
-  const registrar = () => {
-    navigation.replace("Registro");
+    .signInWithEmailAndPassword(email, senha)
+    .then( userCredentials => {
+      console.log("Logado como: " + userCredentials.user?.email)
+      navigation.replace('Menu')
+    })
+    .catch(erro => alert(erro.message))
   }
 
   return (
-  <KeyboardAvoidingView behavior='padding' style={styles.container}>
-   <ImageBackground source={require('../assets/back3.png')} resizeMode='stretch' style={styles.container}>
-    <View style={styles.viewInput}>
-      <Text style={styles.title}>Tela de Login</Text>
-       <Image source={require('../assets/logo.png')} style={styles.imagemLogo} />
+    <KeyboardAvoidingView behavior='padding' style={styles.container}>
+      <ImageBackground source={require('../assets/back2.png')} resizeMode='stretch' style={styles.container}>
+        <Text style={styles.title}>TELA DE LOGIN</Text>
+         <Image source={require('../assets/logo.png')} style={styles.imagemLogo} />
+        
 
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        placeholderTextColor="#7f8c8d"
-        onChangeText={setEmail}
-        value={email}
-      />
+        <View style={styles.textInput}>
+          <TextInput
+            label='E-mail'
+            onChangeText={texto => setEmail(texto)}
+            style={styles.input}
+            activeUnderlineColor='#005362'
+          />
 
-      <TextInput
-        style={styles.input}
-        placeholder="Senha"
-        placeholderTextColor="#7f8c8d"
-        secureTextEntry
-        onChangeText={setSenha}
-        value={senha}
-      />
+          <TextInput
+            label='Senha'
+            onChangeText={texto => setSenha(texto)}
+            secureTextEntry={true}
+            style={styles.input}
+            activeUnderlineColor='#005362'
+          />
+        </View>      
 
-      <TouchableOpacity style={styles.button} onPress={logar}>
-        <Text style={styles.buttonText}>Entrar</Text>
-      </TouchableOpacity>
+        <View style={styles.button2}>
+          <TouchableOpacity onPress={() => navigation.replace('Home')}>
+            <Text style={styles.buttonText}>Login</Text>
+          </TouchableOpacity>
+        </View>
 
-      <TouchableOpacity style={styles.registro} onPress={registrar}>
-        <Text style={styles.registro}>Não tem cadastro? Registre-se</Text>
-      </TouchableOpacity>
+        <View>
+          <TouchableOpacity style={[]} onPress={() => navigation.replace('Registro')}>
+            <Text style={[styles.text]}>Não tem login, registre-se</Text>
+          </TouchableOpacity>
+        </View>
 
-      <StatusBar style="auto" />
-    </View>
-   </ImageBackground>
-  </KeyboardAvoidingView>
+      </ImageBackground>      
+    </KeyboardAvoidingView>
   );
 }
+
 

@@ -1,61 +1,98 @@
 import { useState } from 'react';
-import { StyleSheet, Text, View, Button, TouchableOpacity } from 'react-native';
-import { TextInput } from 'react-native-paper'
-import { auth } from '../firebase';
+import { StyleSheet, Text, View, KeyboardAvoidingView, Button, TouchableOpacity, ImageBackground} from 'react-native';
+import { TextInput } from 'react-native-paper';
+import { auth, firestore } from '../firebase';
 import { useNavigation } from '@react-navigation/native';
-import styles from '../estilo.js'
+import styles from '../estilo';
+
+import { Usuario } from '../model/Usuario';
 
 
-export default function Registro() {
-   const[nome, setNome] = useState('');
-   const[email, setEmail] = useState('');
-   const[senha, setSenha] = useState('');
-   const[fone, setFone] = useState('');
+export default function Register() {
+  const[formUsuario, setFormUsuario] = useState<Partial<Usuario>>({})
 
+  const navigation = useNavigation()
 
-   const navigation = useNavigation();
-
-
-   const cadastrar = () =>{
+  const registrar = () => {
     auth
-    .createUserWithEmailAndPassword(email, senha)
+    .createUserWithEmailAndPassword(formUsuario.email, formUsuario.senha)
     .then( userCredentials => {
-        console.log(' : ', userCredentials.user.email);
-        navigation.replace("Home");
-    })
-   }
+      console.log("Logado como: " + userCredentials.user?.email)
+      
+      const refUsuario = firestore.collection("Usuario");
+      const idUsuario  = refUsuario.doc(auth.currentUser.uid);
+      idUsuario.set({
+        id    : auth.currentUser.uid,
+        nome  : formUsuario.nome,
+        email : formUsuario.email,
+        senha : formUsuario.senha,
+        fone  : formUsuario.fone
+      })
 
-
-     const sair = () => {
-    auth
-    .signOut()
-    .then( ()=>{
-     navigation.replace('Login')
+      navigation.replace('Menu')
     })
+    .catch(erro => alert(erro.message))
   }
 
-
   return (
-    <View style={styles.container}>
-      <Text style={styles.titleText}>cadastro de usuario</Text>
-      
+    <KeyboardAvoidingView behavior='padding' style={styles.container}>
+      <ImageBackground source={require('../assets/back2.png')} resizeMode='stretch' style={styles.container}>
+        <Text style={styles.title}>CADASTRO DE USUÁRIOS</Text>
 
-      <TextInput style={styles.textInput} label='Nome'     onChangeText={texto => setNome(texto)}/>
-      <TextInput style={styles.textInput} label='Email'    onChangeText={texto => setEmail(texto)}/>
-      <TextInput style={styles.textInput} label='Senha'    onChangeText={texto => setSenha(texto)}/>
-      <TextInput style={styles.textInput} label='Telefone' onChangeText={texto => setFone(texto)}/>
+        <View style={styles.input}>
+          <TextInput 
+            label='Nome' 
+            onChangeText={valor => setFormUsuario({
+              ...formUsuario,
+              nome : valor
+            })}
+            style={styles.input}
+            activeUnderlineColor='#005362'
+          />
+          <TextInput 
+            label='Email' 
+            onChangeText={valor => setFormUsuario({
+              ...formUsuario,
+              email : valor
+            })}
+            style={styles.input}  
+            activeUnderlineColor='#005362'    
+          />
+          <TextInput 
+            label='Senha' 
+            onChangeText={valor => setFormUsuario({
+              ...formUsuario,
+              senha : valor
+            })}
+            secureTextEntry={true}
+            style={styles.input}
+            activeUnderlineColor='#005362'
+          />
+          <TextInput 
+            label='Fone' 
+            onChangeText={valor => setFormUsuario({
+              ...formUsuario,
+              fone : valor
+            })}
+            style={styles.input}
+            activeUnderlineColor='#005362'
+          />
+        </View>
 
+        <View style={styles.button2}>
+          <TouchableOpacity onPress={() => navigation.replace('Home')}>
+            <Text style={styles.buttonText}>Registrar</Text>
+          </TouchableOpacity>
+        </View>
 
-      <TouchableOpacity style={styles.button} onPress={cadastrar}>
-        <Text style={styles.buttonText}>Cadastrar</Text>
-      </TouchableOpacity>
+        <View>
+          <TouchableOpacity style={[styles.button2, styles.button2]} onPress={() => navigation.replace('Login')}>
+            <Text style={[styles.buttonText, styles.buttonText]}>Voltar</Text>
+          </TouchableOpacity>
+        </View>
 
-
-      <TouchableOpacity style={styles.button} onPress={sair}>
-        <Text style={styles.buttonText}>Voltar</Text>
-      </TouchableOpacity>
-
-    </View>
+      </ImageBackground>
+    </KeyboardAvoidingView>
   );
 }
 

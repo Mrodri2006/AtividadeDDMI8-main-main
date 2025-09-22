@@ -45,20 +45,14 @@ export default StyleSheet.create({
     bottom: 80
   
   },
-  button: {
-    width: '80%',
-    backgroundColor: '#0984e3',
-    paddingVertical: 16,
-    borderRadius: 12,
-    alignItems: 'center',
-    marginTop: 20,
-    shadowColor: '#0985e3ff',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 5,
-    elevation: 4,
-    bottom: 60
-  },
+
+buttonText: {
+  color: '#fff', // White text
+  fontSize: 18, // Increase text size for better readability
+  fontWeight: 'bold', // Make text bold for emphasis
+  letterSpacing: 1, // Add a slight letter spacing for a cleaner look
+  textAlign: 'center', // Center text properly
+},
   registro:{
     paddingVertical: 16,
     borderRadius: 12,
@@ -93,19 +87,19 @@ export default StyleSheet.create({
     margin: 30,
     bottom:140
   },
-  button2: {
-    backgroundColor: '#28a745',  
-    paddingVertical: 14,
-    paddingHorizontal: 30,
-    borderRadius: 12,
-    marginVertical: 15,
-    alignItems: 'center',
-    elevation: 3,
-    shadowColor: '#28a745',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-  },
+button2: {
+  width: '50%', // Largura um pouco maior para dar destaque
+  backgroundColor: '#00b894', // Cor de fundo diferente, um tom de verde para contraste
+  paddingVertical: 18, // Tamanho da altura um pouco menor que o botão de login
+  borderRadius: 16, // Bordas arredondadas para manter a consistência com o botão anterior
+  alignItems: 'center',
+  marginTop: 80,
+  shadowOpacity: 0.15,
+  shadowRadius: 10,
+  elevation: 5,
+  bottom: 60,
+  borderWidth: 1,
+},
   buttonText: {
     color: '#fff',
     fontSize: 18,
